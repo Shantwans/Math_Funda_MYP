@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Money Math Challenge</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 900px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+        }
+        h1, h2 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        h1 {
+            font-size: 2.8em;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        h2 {
+            font-size: 2em;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+            margin-top: 40px;
+            margin-bottom: 25px;
+        }
+        .topic-navigation {
+            text-align: center;
+            margin-bottom: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+        .topic-button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            flex-grow: 1;
+            max-width: 200px; /* Limit button width */
+        }
+        .topic-button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+        .topic-button.active {
+            background-color: #e67e22;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            transform: translateY(-2px);
+        }
+
+        .topic-section {
+            display: none; /* Hidden by default */
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: #fdfdfd;
+            margin-top: 20px;
+        }
+        .topic-section.active {
+            display: block; /* Show active topic */
+        }
+
+        .question-block {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        .question-block h3 {
+            font-size: 1.4em;
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #34495e;
+        }
+        .question-block input[type="text"],
+        .question-block input[type="number"] {
+            width: calc(100% - 20px);
+            padding: 12px;
+            margin-top: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1.1em;
+            box-sizing: border-box;
+        }
+        .question-block .options label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            cursor: pointer;
+            padding: 8px 0;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        .question-block .options label:hover {
+            background-color: #f0f0f0;
+        }
+        .question-block .options input[type="radio"],
+        .question-block .options input[type="checkbox"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+
+        .check-button {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease;
+            display: block;
+            margin-top: 20px;
+            width: fit-content;
+        }
+        .check-button:hover {
+            background-color: #229954;
+        }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 1.1em;
+            text-align: center;
+        }
+        .feedback.correct {
+            background-color: #e6ffe6;
+            color: #28a745;
+            border: 1px solid #28a745;
+        }
+        .feedback.incorrect {
+            background-color: #ffe6e6;
+            color: #dc3545;
+            border: 1px solid #dc3545;
+        }
+        .feedback.partial {
+            background-color: #fffacd;
+            color: #ffc107;
+            border: 1px solid #ffc107;
+        }
+
+        .total-score {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #ecf0f1;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .reset-button {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+        }
+        .reset-button:hover {
+            background-color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💰 Money Math Challenge 💰</h1>
+        <div class="topic-navigation">
+            <button class="topic-button active" data-topic="topic1">1. Denominations</button>
+            <button class="topic-button" data-topic="topic2">2. Making Amounts</button>
+            <button class="topic-button" data-topic="topic3">3. Conversion</button>
+            <button class="topic-button" data-topic="topic4">4. Counting Money</button>
+            <button class="topic-button" data-topic="topic5">5. Words & Numbers</button>
+            <button class="topic-button" data-topic="topic6">6. Expanded Form</button>
+            <button class="topic-button" data-topic="topic7">7. Creating a Bill</button>
+            <button class="topic-button" data-topic="topic8">8. Budgeting</button>
+            <button class="topic-button" data-topic="topic9">9. Finding Errors</button>
+            <button class="topic-button" data-topic="topic10">10. Add/Subtract</button>
+            <button class="topic-button" data-topic="topic11">11. Word Problems</button>
+            <button class="topic-button" data-topic="topic12">12. Comparing Prices</button>
+            <button class="topic-button" data-topic="topic13">13. Estimating Costs</button>
+            <button class="topic-button" data-topic="topic14">14. Giving Change</button>
+            <button class="topic-button" data-topic="topic15">15. Multiplication</button>
+        </div>
+
+        <!-- Topic 1: Denominations: Notes and Coins -->
+        <div id="topic1" class="topic-section active">
+            <h2>1. Denominations: Notes and Coins</h2>
+            <div class="question-block">
+                <h3>Question 1.1: If I have 4 ten-rupee notes and 2 five-rupee coins, how much money do I have in total?</h3>
+                <input type="number" id="q1_1_input" placeholder="Enter amount in Rupees (e.g., 50)">
+                <button class="check-button" onclick="checkAnswer('q1_1', 50)">Check Answer</button>
+                <div id="q1_1_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 1.2: Circle all combinations that can make exactly ₹100. (Select all that apply)</h3>
+                <div class="options">
+                    <label><input type="checkbox" name="q1_2_options" value="a"> a) Two ₹50 notes</label>
+                    <label><input type="checkbox" name="q1_2_options" value="b"> b) One ₹100 note</label>
+                    <label><input type="checkbox" name="q1_2_options" value="c"> c) Three ₹20 notes and two ₹10 notes</label>
+                    <label><input type="checkbox" name="q1_2_options" value="d"> d) Ten ₹5 coins</label>
+                    <label><input type="checkbox" name="q1_2_options" value="e"> e) Four ₹20 notes and one ₹10 note</label>
+                </div>
+                <button class="check-button" onclick="checkAnswer('q1_2', ['a', 'b', 'e'])">Check Answer</button>
+                <div id="q1_2_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 1.3: Tick which of these make exactly ₹200: (Select one)</h3>
+                <div class="options">
+                    <label><input type="radio" name="q1_3_options" value="a"> a) 2 × ₹100 notes</label>
+                    <label><input type="radio" name="q1_3_options" value="b"> b) 1 × ₹100 + 2 × ₹50 notes</label>
+                    <label><input type="radio" name="q1_3_options" value="c"> c) 10 × ₹10 notes</label>
+                </div>
+                <button class="check-button" onclick="checkAnswer('q1_3', 'a')">Check Answer</button>
+                <div id="q1_3_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 1.4: Fill in the blanks: How many ₹50 notes make ₹400?</h3>
+                <input type="number" id="q1_4_input" placeholder="Enter number">
+                <button class="check-button" onclick="checkAnswer('q1_4', 8)">Check Answer</button>
+                <div id="q1_4_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 1.5: Identify the total value: Three ₹20 notes, five ₹5 coins, and one ₹10 coin.</h3>
+                <input type="number" id="q1_5_input" placeholder="Enter total in Rupees">
+                <button class="check-button" onclick="checkAnswer('q1_5', 95)">Check Answer</button>
+                <div id="q1_5_feedback" class="feedback"></div>
+            </div>
+
+             <div class="question-block">
+                <h3>Question 1.6: Which combination correctly shows ₹75? (Select one)</h3>
+                <div class="options">
+                    <label><input type="radio" name="q1_6_options" value="a"> a) One ₹50 note, two ₹10 notes, one ₹5 coin</label>
+                    <label><input type="radio" name="q1_6_options" value="b"> b) Three ₹20 notes, one ₹10 note, five ₹1 coins</label>
+                    <label><input type="radio" name="q1_6_options" value="c"> c) Two ₹50 notes, one ₹5 coin</label>
+                </div>
+                <button class="check-button" onclick="checkAnswer('q1_6', 'a')">Check Answer</button>
+                <div id="q1_6_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 1.7: Fill in the blanks: ________ ₹100 notes make ₹700.</h3>
+                <input type="number" id="q1_7_input" placeholder="Enter number">
+                <button class="check-button" onclick="checkAnswer('q1_7', 7)">Check Answer</button>
+                <div id="q1_7_feedback" class="feedback"></div>
+            </div>
+
+             <!-- Add more questions for Topic 1 here (up to 15) -->
+
+        </div>
+
+        <!-- Topic 2: Making ₹100 / ₹500 / ₹1000 using combinations -->
+        <div id="topic2" class="topic-section">
+            <h2>2. Making ₹100 / ₹500 / ₹1000 using combinations</h2>
+            <div class="question-block">
+                <h3>Question 2.1: List 3 ways to make ₹100 using ₹50, ₹20, ₹10, ₹5 notes/coins. (Separate combinations with a comma, e.g., 2x50, 1x50+2x20+1x10)</h3>
+                <input type="text" id="q2_1_input" placeholder="e.g., 2x50, 1x50+2x20+1x10, ...">
+                <button class="check-button" onclick="checkAnswer('q2_1', ['2x50', '1x50+2x20+1x10', '5x20', '10x10', '20x5', '1x50+5x10', '1x50+1x20+3x10', '1x50+3x10+4x5', '1x20+8x10', '2x20+6x10', '3x20+4x10'], true)">Check Answer</button>
+                <div id="q2_1_feedback" class="feedback"></div>
+                <small>Hint: There are many correct combinations. Try to find three unique ones.</small>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 2.2: Fill in the boxes to make ₹200. [ ₹___ + ₹___ + ₹___ = ₹200 ] (Enter three numbers, separated by commas, e.g., 100,50,50)</h3>
+                <input type="text" id="q2_2_input" placeholder="e.g., 100,50,50">
+                <button class="check-button" onclick="checkAnswer('q2_2', [
+                    [100,50,50], [50,100,50], [50,50,100], [100,20,80], [20,100,80], [80,100,20],
+                    [100,10,90], [10,100,90], [90,100,10], [50,50,100], [20,20,160], [10,10,180],
+                    [20,80,100], [10,90,100], [20,160,20], [10,180,10]
+                ], 'combination')">Check Answer</button>
+                <div id="q2_2_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 2.3: Can you use only ₹20 and ₹10 notes to make exactly ₹150? (Yes/No)</h3>
+                <input type="text" id="q2_3_input" placeholder="Yes or No">
+                <button class="check-button" onclick="checkAnswer('q2_3', 'Yes')">Check Answer</button>
+                <div id="q2_3_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 2.4: Which of these combinations makes ₹500? (Select one)</h3>
+                <div class="options">
+                    <label><input type="radio" name="q2_4_options" value="a"> a) Two ₹200 notes and one ₹50 note</label>
+                    <label><input type="radio" name="q2_4_options" value="b"> b) Five ₹100 notes</label>
+                    <label><input type="radio" name="q2_4_options" value="c"> c) Ten ₹50 notes</label>
+                </div>
+                <button class="check-button" onclick="checkAnswer('q2_4', 'b')">Check Answer</button>
+                <div id="q2_4_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 2.5: What notes would you combine to make ₹70 if you only had ₹50, ₹10, and ₹5 notes? (e.g., 1x50+2x10)</h3>
+                <input type="text" id="q2_5_input" placeholder="e.g., 1x50+2x10">
+                <button class="check-button" onclick="checkAnswer('q2_5', ['1x50+2x10', '1x50+1x10+2x5', '7x10', '14x5'], true)">Check Answer</button>
+                <div id="q2_5_feedback" class="feedback"></div>
+            </div>
+
+             <div class="question-block">
+                <h3>Question 2.6: Fill in the blanks: To make ₹1000, you need ______ ₹200 notes.</h3>
+                <input type="number" id="q2_6_input" placeholder="Enter number">
+                <button class="check-button" onclick="checkAnswer('q2_6', 5)">Check Answer</button>
+                <div id="q2_6_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 2.7: Can you make ₹175 using only ₹50 and ₹20 notes? (Yes/No)</h3>
+                <input type="text" id="q2_7_input" placeholder="Yes or No">
+                <button class="check-button" onclick="checkAnswer('q2_7', 'No')">Check Answer</button>
+                <div id="q2_7_feedback" class="feedback"></div>
+            </div>
+
+            <!-- Add more questions for Topic 2 here (up to 15) -->
+
+        </div>
+
+        <!-- Topic 3: Rupees to Paise Conversion -->
+        <div id="topic3" class="topic-section">
+            <h2>3. Rupees to Paise Conversion</h2>
+            <div class="question-block">
+                <h3>Question 3.1: Convert ₹4 to paise.</h3>
+                <input type="number" id="q3_1_input" placeholder="Enter paise">
+                <button class="check-button" onclick="checkAnswer('q3_1', 400)">Check Answer</button>
+                <div id="q3_1_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 3.2: Convert ₹8.25 to paise.</h3>
+                <input type="number" id="q3_2_input" placeholder="Enter paise">
+                <button class="check-button" onclick="checkAnswer('q3_2', 825)">Check Answer</button>
+                <div id="q3_2_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 3.3: Match ₹ and paise values: ₹3.50 = ? paise. (Enter number only)</h3>
+                <input type="number" id="q3_3_input" placeholder="Enter paise">
+                <button class="check-button" onclick="checkAnswer('q3_3', 350)">Check Answer</button>
+                <div id="q3_3_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 3.4: True or False: ₹5 = 500 paise.</h3>
+                <div class="options">
+                    <label><input type="radio" name="q3_4_options" value="True"> True</label>
+                    <label><input type="radio" name="q3_4_options" value="False"> False</label>
+                </div>
+                <button class="check-button" onclick="checkAnswer('q3_4', 'True')">Check Answer</button>
+                <div id="q3_4_feedback" class="feedback"></div>
+            </div>
+
+             <div class="question-block">
+                <h3>Question 3.5: Convert 150 paise to Rupees. (Enter amount in Rupees, e.g., 1.50)</h3>
+                <input type="number" step="0.01" id="q3_5_input" placeholder="Enter Rupees">
+                <button class="check-button" onclick="checkAnswer('q3_5', 1.50)">Check Answer</button>
+                <div id="q3_5_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 3.6: Which is the correct conversion for ₹12.00? (Select one)</h3>
+                <div class="options">
+                    <label><input type="radio" name="q3_6_options" value="a"> a) 120 paise</label>
+                    <label><input type="radio" name="q3_6_options" value="b"> b) 1200 paise</label>
+                    <label><input type="radio" name="q3_6_options" value="c"> c) 12 paise</label>
+                </div>
+                <button class="check-button" onclick="checkAnswer('q3_6', 'b')">Check Answer</button>
+                <div id="q3_6_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 3.7: Fill in the blank: ₹9.75 = ________ paise.</h3>
+                <input type="number" id="q3_7_input" placeholder="Enter paise">
+                <button class="check-button" onclick="checkAnswer('q3_7', 975)">Check Answer</button>
+                <div id="q3_7_feedback" class="feedback"></div>
+            </div>
+            <!-- Add more questions for Topic 3 here (up to 15) -->
+
+        </div>
+
+        <!-- Topic 4: Counting Money – Small and Large Amounts -->
+        <div id="topic4" class="topic-section">
+            <h2>4. Counting Money – Small and Large Amounts</h2>
+            <div class="question-block">
+                <h3>Question 4.1: Count and write the total: 3 × ₹10 notes + 2 × ₹5 coins.</h3>
+                <input type="number" id="q4_1_input" placeholder="Enter total in Rupees">
+                <button class="check-button" onclick="checkAnswer('q4_1', 40)">Check Answer</button>
+                <div id="q4_1_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 4.2: Count and write the total: 1 × ₹100 note + 2 × ₹200 notes.</h3>
+                <input type="number" id="q4_2_input" placeholder="Enter total in Rupees">
+                <button class="check-button" onclick="checkAnswer('q4_2', 500)">Check Answer</button>
+                <div id="q4_2_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 4.3: Who has more money? Riya with ₹250 or Aanya with 2 × ₹100 notes + 1 × ₹50 note? (Riya/Aanya)</h3>
+                <input type="text" id="q4_3_input" placeholder="Riya or Aanya">
+                <button class="check-button" onclick="checkAnswer('q4_3', 'Aanya')">Check Answer</button>
+                <div id="q4_3_feedback" class="feedback"></div>
+            </div>
+
+             <div class="question-block">
+                <h3>Question 4.4: What is the total value of: one ₹500 note, three ₹100 notes, and four ₹20 notes?</h3>
+                <input type="number" id="q4_4_input" placeholder="Enter total in Rupees">
+                <button class="check-button" onclick="checkAnswer('q4_4', 880)">Check Answer</button>
+                <div id="q4_4_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 4.5: You have 7 five-rupee coins and 3 ten-rupee notes. How much money do you have?</h3>
+                <input type="number" id="q4_5_input" placeholder="Enter total in Rupees">
+                <button class="check-button" onclick="checkAnswer('q4_5', 65)">Check Answer</button>
+                <div id="q4_5_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 4.6: If you have a wallet with one ₹2000 note, two ₹500 notes, and five ₹100 notes, what is the total value?</h3>
+                <input type="number" id="q4_6_input" placeholder="Enter total in Rupees">
+                <button class="check-button" onclick="checkAnswer('q4_6', 3500)">Check Answer</button>
+                <div id="q4_6_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 4.7: Arrange these amounts from smallest to largest: ₹75, ₹120, ₹50, ₹100. (Separate with commas, e.g., 50,75,100,120)</h3>
+                <input type="text" id="q4_7_input" placeholder="e.g., 50,75,100,120">
+                <button class="check-button" onclick="checkAnswer('q4_7', '50,75,100,120')">Check Answer</button>
+                <div id="q4_7_feedback" class="feedback"></div>
+            </div>
+
+            <!-- Add more questions for Topic 4 here (up to 15) -->
+
+        </div>
+
+        <!-- Topic 5: Writing in Words and Numbers -->
+        <div id="topic5" class="topic-section">
+            <h2>5. Writing in Words and Numbers</h2>
+            <div class="question-block">
+                <h3>Question 5.1: Write in words: ₹125</h3>
+                <input type="text" id="q5_1_input" placeholder="e.g., One hundred twenty-five rupees">
+                <button class="check-button" onclick="checkAnswer('q5_1', 'One hundred twenty-five rupees', true)">Check Answer</button>
+                <div id="q5_1_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 5.2: Write in numerals: Two hundred and fifty rupees</h3>
+                <input type="number" id="q5_2_input" placeholder="Enter amount (e.g., 250)">
+                <button class="check-button" onclick="checkAnswer('q5_2', 250)">Check Answer</button>
+                <div id="q5_2_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 5.3: Match the words and numbers: 'Five hundred and five rupees' corresponds to?</h3>
+                <div class="options">
+                    <label><input type="radio" name="q5_3_options" value="a"> a) ₹550</label>
+                    <label><input type="radio" name="q5_3_options" value="b"> b) ₹505</label>
+                    <label><input type="radio" name="q5_3_options" value="c"> c) ₹5005</label>
+                </div>
+                <button class="check-button" onclick="checkAnswer('q5_3', 'b')">Check Answer</button>
+                <div id="q5_3_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 5.4: Fill in the blanks: ₹470 = ______________ hundred and ______________ rupees.</h3>
+                <input type="text" id="q5_4_input" placeholder="e.g., Four, Seventy">
+                <button class="check-button" onclick="checkAnswer('q5_4', 'Four, Seventy')">Check Answer</button>
+                <div id="q5_4_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 5.5: Write in words: ₹999</h3>
+                <input type="text" id="q5_5_input" placeholder="e.g., Nine hundred ninety-nine rupees">
+                <button class="check-button" onclick="checkAnswer('q5_5', 'Nine hundred ninety-nine rupees', true)">Check Answer</button>
+                <div id="q5_5_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 5.6: Write in numerals: One thousand two hundred rupees.</h3>
+                <input type="number" id="q5_6_input" placeholder="Enter amount (e.g., 1200)">
+                <button class="check-button" onclick="checkAnswer('q5_6', 1200)">Check Answer</button>
+                <div id="q5_6_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 5.7: Which word form is correct for ₹70?</h3>
+                <div class="options">
+                    <label><input type="radio" name="q5_7_options" value="a"> a) Seven Zero rupees</label>
+                    <label><input type="radio" name="q5_7_options" value="b"> b) Seventy rupees</label>
+                    <label><input type="radio" name="q5_7_options" value="c"> c) Seven rupees</label>
+                </div>
+                <button class="check-button" onclick="checkAnswer('q5_7', 'b')">Check Answer</button>
+                <div id="q5_7_feedback" class="feedback"></div>
+            </div>
+
+            <!-- Add more questions for Topic 5 here (up to 15) -->
+
+        </div>
+
+        <!-- Topic 6: Expanded Form -->
+        <div id="topic6" class="topic-section">
+            <h2>6. Expanded Form</h2>
+            <div class="question-block">
+                <h3>Question 6.1: ₹215 = ₹200 + ₹___ + ₹___</h3>
+                <input type="text" id="q6_1_input" placeholder="Enter two numbers, comma separated (e.g., 10,5)">
+                <button class="check-button" onclick="checkAnswer('q6_1', '10,5')">Check Answer</button>
+                <div id="q6_1_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 6.2: Break ₹483 into its place value parts (hundreds, tens, ones).</h3>
+                <input type="text" id="q6_2_input" placeholder="e.g., 400,80,3">
+                <button class="check-button" onclick="checkAnswer('q6_2', '400,80,3')">Check Answer</button>
+                <div id="q6_2_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 6.3: Complete the expanded form: ₹600 + ₹30 + ₹9 = ₹___</h3>
+                <input type="number" id="q6_3_input" placeholder="Enter total">
+                <button class="check-button" onclick="checkAnswer('q6_3', 639)">Check Answer</button>
+                <div id="q6_3_feedback" class="feedback"></div>
+            </div>
+
+             <div class="question-block">
+                <h3>Question 6.4: ₹902 = ₹900 + ₹___ + ₹___</h3>
+                <input type="text" id="q6_4_input" placeholder="Enter two numbers, comma separated (e.g., 0,2)">
+                <button class="check-button" onclick="checkAnswer('q6_4', '0,2')">Check Answer</button>
+                <div id="q6_4_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 6.5: What is the value of the '5' in ₹542?</h3>
+                <input type="number" id="q6_5_input" placeholder="Enter value">
+                <button class="check-button" onclick="checkAnswer('q6_5', 500)">Check Answer</button>
+                <div id="q6_5_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 6.6: ₹105 = ₹___ + ₹0 + ₹___</h3>
+                <input type="text" id="q6_6_input" placeholder="e.g., 100,5">
+                <button class="check-button" onclick="checkAnswer('q6_6', '100,5')">Check Answer</button>
+                <div id="q6_6_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 6.7: Which is the correct expanded form for ₹340?</h3>
+                <div class="options">
+                    <label><input type="radio" name="q6_7_options" value="a"> a) ₹300 + ₹40 + ₹0</label>
+                    <label><input type="radio" name="q6_7_options" value="b"> b) ₹30 + ₹40 + ₹0</label>
+                    <label><input type="radio" name="q6_7_options" value="c"> c) ₹3 + ₹4 + ₹0</label>
+                </div>
+                <button class="check-button" onclick="checkAnswer('q6_7', 'a')">Check Answer</button>
+                <div id="q6_7_feedback" class="feedback"></div>
+            </div>
+            <!-- Add more questions for Topic 6 here (up to 15) -->
+
+        </div>
+
+        <!-- Topic 7: Creating a Bill -->
+        <div id="topic7" class="topic-section">
+            <h2>7. Creating a Bill</h2>
+            <div class="question-block">
+                <h3>Question 7.1: Calculate the total for the following items: <br> Cake | ₹250 | Quantity: 1 <br> Balloons | ₹5 | Quantity: 10</h3>
+                <input type="number" id="q7_1_input" placeholder="Enter total bill amount">
+                <button class="check-button" onclick="checkAnswer('q7_1', 300)">Check Answer</button>
+                <div id="q7_1_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 7.2: Fill the blank: <br> Item | Price | Quantity | Total <br> Pen | ₹10 | 3 | ₹___</h3>
+                <input type="number" id="q7_2_input" placeholder="Enter total for Pens">
+                <button class="check-button" onclick="checkAnswer('q7_2', 30)">Check Answer</button>
+                <div id="q7_2_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 7.3: Calculate the final bill with 5% tax: <br> Book | ₹150 | Quantity: 1 <br> Pencil Box | ₹50 | Quantity: 1</h3>
+                <input type="number" step="0.01" id="q7_3_input" placeholder="Enter final bill with tax">
+                <button class="check-button" onclick="checkAnswer('q7_3', 210.00)">Check Answer</button>
+                <div id="q7_3_feedback" class="feedback"></div>
+                <small>Hint: Total price = (Book + Pencil Box) + 5% tax on total.</small>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 7.4: You bought 2 chocolates for ₹25 each and 1 packet of chips for ₹30. What is your total bill?</h3>
+                <input type="number" id="q7_4_input" placeholder="Enter total bill">
+                <button class="check-button" onclick="checkAnswer('q7_4', 80)">Check Answer</button>
+                <div id="q7_4_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 7.5: A toy car costs ₹120. If you buy 2 of them, what is the total cost?</h3>
+                <input type="number" id="q7_5_input" placeholder="Enter total cost">
+                <button class="check-button" onclick="checkAnswer('q7_5', 240)">Check Answer</button>
+                <div id="q7_5_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 7.6: A stationery shop offers a 10% discount on total bills over ₹500. If your bill is ₹600, what is the final amount after discount?</h3>
+                <input type="number" step="0.01" id="q7_6_input" placeholder="Enter final amount">
+                <button class="check-button" onclick="checkAnswer('q7_6', 540.00)">Check Answer</button>
+                <div id="q7_6_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 7.7: What is the missing quantity? <br> Item | Price | Quantity | Total <br> Apples | ₹20 | ___ | ₹100</h3>
+                <input type="number" id="q7_7_input" placeholder="Enter quantity">
+                <button class="check-button" onclick="checkAnswer('q7_7', 5)">Check Answer</button>
+                <div id="q7_7_feedback" class="feedback"></div>
+            </div>
+
+            <!-- Add more questions for Topic 7 here (up to 15) -->
+
+        </div>
+
+        <!-- Topic 8: Budgeting with ₹500 / ₹2000 -->
+        <div id="topic8" class="topic-section">
+            <h2>8. Budgeting with ₹500 / ₹2000</h2>
+            <div class="question-block">
+                <h3>Question 8.1: You have ₹500. Which of these can you buy? (Select all affordable combinations, if prices are: Shirt ₹300, Book ₹250, Toy Car ₹180, Pencil Box ₹70)</h3>
+                <div class="options">
+                    <label><input type="checkbox" name="q8_1_options" value="a"> a) Shirt + Pencil Box</label>
+                    <label><input type="checkbox" name="q8_1_options" value="b"> b) Book + Toy Car</label>
+                    <label><input type="checkbox" name="q8_1_options" value="c"> c) Shirt + Book</label>
+                    <label><input type="checkbox" name="q8_1_options" value="d"> d) Toy Car + Pencil Box</label>
+                </div>
+                <button class="check-button" onclick="checkAnswer('q8_1', ['a', 'd'])">Check Answer</button>
+                <div id="q8_1_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 8.2: You have ₹1000. Which items can you buy if prices are: Bag ₹600, Shoes ₹550, Hat ₹150, T-shirt ₹250? (Select all that apply)</h3>
+                <div class="options">
+                    <label><input type="checkbox" name="q8_2_options" value="a"> a) Bag + Hat</label>
+                    <label><input type="checkbox" name="q8_2_options" value="b"> b) Shoes + T-shirt</label>
+                    <label><input type="checkbox" name="q8_2_options" value="c"> c) Bag + T-shirt</label>
+                </div>
+                <button class="check-button" onclick="checkAnswer('q8_2', ['a', 'c'])">Check Answer</button>
+                <div id="q8_2_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 8.3: If you have ₹2000 and buy a Bicycle for ₹1800, how much money is left?</h3>
+                <input type="number" id="q8_3_input" placeholder="Enter amount left">
+                <button class="check-button" onclick="checkAnswer('q8_3', 200)">Check Answer</button>
+                <div id="q8_3_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 8.4: With ₹500, what is the maximum number of ₹70 notebooks you can buy?</h3>
+                <input type="number" id="q8_4_input" placeholder="Enter number of notebooks">
+                <button class="check-button" onclick="checkAnswer('q8_4', 7)">Check Answer</button>
+                <div id="q8_4_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 8.5: You have ₹1500. Can you buy a Tablet for ₹1200 and a cover for ₹350? (Yes/No)</h3>
+                <input type="text" id="q8_5_input" placeholder="Yes or No">
+                <button class="check-button" onclick="checkAnswer('q8_5', 'No')">Check Answer</button>
+                <div id="q8_5_feedback" class="feedback"></div>
+            </div>
+
+             <div class="question-block">
+                <h3>Question 8.6: Your budget for snacks is ₹200. You bought chips for ₹50, cookies for ₹70. How much more can you spend?</h3>
+                <input type="number" id="q8_6_input" placeholder="Enter amount">
+                <button class="check-button" onclick="checkAnswer('q8_6', 80)">Check Answer</button>
+                <div id="q8_6_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 8.7: Circle affordable combinations for ₹1000: (If prices are: Jeans ₹700, Shirt ₹400, Shoes ₹800, Cap ₹150)</h3>
+                <div class="options">
+                    <label><input type="checkbox" name="q8_7_options" value="a"> a) Jeans + Cap</label>
+                    <label><input type="checkbox" name="q8_7_options" value="b"> b) Shirt + Cap</label>
+                    <label><input type="checkbox" name="q8_7_options" value="c"> c) Shoes + Cap</label>
+                </div>
+                <button class="check-button" onclick="checkAnswer('q8_7', ['a', 'b'])">Check Answer</button>
+                <div id="q8_7_feedback" class="feedback"></div>
+            </div>
+            <!-- Add more questions for Topic 8 here (up to 15) -->
+
+        </div>
+
+        <!-- Topic 9: Finding Errors in Totals -->
+        <div id="topic9" class="topic-section">
+            <h2>9. Finding Errors in Totals</h2>
+            <div class="question-block">
+                <h3>Question 9.1: Spot the mistake: Ball = ₹150, Bat = ₹300 → Total = ₹400. What is the correct total?</h3>
+                <input type="number" id="q9_1_input" placeholder="Enter correct total">
+                <button class="check-button" onclick="checkAnswer('q9_1', 450)">Check Answer</button>
+                <div id="q9_1_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 9.2: Tick ✔️ the correct bills, cross ❌ the wrong ones. <br> Bill 1: Pen ₹10, Eraser ₹5, Total ₹15 (Correct/Wrong?)</h3>
+                <div class="options">
+                    <label><input type="radio" name="q9_2_options" value="Correct"> Correct</label>
+                    <label><input type="radio" name="q9_2_options" value="Wrong"> Wrong</label>
+                </div>
+                <button class="check-button" onclick="checkAnswer('q9_2', 'Correct')">Check Answer</button>
+                <div id="q9_2_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 9.3: Bill 2: Apple ₹30, Orange ₹20, Total ₹60 (Correct/Wrong?)</h3>
+                <div class="options">
+                    <label><input type="radio" name="q9_3_options" value="Correct"> Correct</label>
+                    <label><input type="radio" name="q9_3_options" value="Wrong"> Wrong</label>
+                </div>
+                <button class="check-button" onclick="checkAnswer('q9_3', 'Wrong')">Check Answer</button>
+                <div id="q9_3_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 9.4: Recalculate and correct: Toy Car ₹120, Doll ₹80, Total given: ₹150. What is the correct total?</h3>
+                <input type="number" id="q9_4_input" placeholder="Enter correct total">
+                <button class="check-button" onclick="checkAnswer('q9_4', 200)">Check Answer</button>
+                <div id="q9_4_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 9.5: Find the error: Shirt ₹400, Trousers ₹600, Total ₹900. What is the missing amount in the total?</h3>
+                <input type="number" id="q9_5_input" placeholder="Enter missing amount (difference)">
+                <button class="check-button" onclick="checkAnswer('q9_5', 100)">Check Answer</button>
+                <div id="q9_5_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 9.6: A bill shows: Milk ₹40, Bread ₹35, Eggs ₹60. The total is ₹125. Is this total correct? (Yes/No)</h3>
+                <input type="text" id="q9_6_input" placeholder="Yes or No">
+                <button class="check-button" onclick="checkAnswer('q9_6', 'Yes')">Check Answer</button>
+                <div id="q9_6_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 9.7: If a bill states you bought items for ₹150 and ₹250, and the total is ₹300, is this correct? If not, what should it be? (Enter Correct or correct total)</h3>
+                <input type="text" id="q9_7_input" placeholder="e.g., 400 or Correct">
+                <button class="check-button" onclick="checkAnswer('q9_7', '400')">Check Answer</button>
+                <div id="q9_7_feedback" class="feedback"></div>
+            </div>
+            <!-- Add more questions for Topic 9 here (up to 15) -->
+
+        </div>
+
+        <!-- Topic 10: Adding & Subtracting Money -->
+        <div id="topic10" class="topic-section">
+            <h2>10. Adding & Subtracting Money</h2>
+            <div class="question-block">
+                <h3>Question 10.1: Add these: ₹250 + ₹325</h3>
+                <input type="number" id="q10_1_input" placeholder="Enter total">
+                <button class="check-button" onclick="checkAnswer('q10_1', 575)">Check Answer</button>
+                <div id="q10_1_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 10.2: Riya has ₹500. She spends ₹350. How much money does she have left?</h3>
+                <input type="number" id="q10_2_input" placeholder="Enter amount left">
+                <button class="check-button" onclick="checkAnswer('q10_2', 150)">Check Answer</button>
+                <div id="q10_2_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 10.3: Subtract and find change: You buy a toy for ₹180 and pay with a ₹200 note. How much change do you get?</h3>
+                <input type="number" id="q10_3_input" placeholder="Enter change">
+                <button class="check-button" onclick="checkAnswer('q10_3', 20)">Check Answer</button>
+                <div id="q10_3_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 10.4: You had ₹75. You earned ₹25 more. How much do you have now?</h3>
+                <input type="number" id="q10_4_input" placeholder="Enter total">
+                <button class="check-button" onclick="checkAnswer('q10_4', 100)">Check Answer</button>
+                <div id="q10_4_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 10.5: Your parents gave you ₹100. You spent ₹45 on a comic book. How much is left?</h3>
+                <input type="number" id="q10_5_input" placeholder="Enter amount left">
+                <button class="check-button" onclick="checkAnswer('q10_5', 55)">Check Answer</button>
+                <div id="q10_5_feedback" class="feedback"></div>
+            </div>
+
+             <div class="question-block">
+                <h3>Question 10.6: Add: ₹125.50 + ₹75.50</h3>
+                <input type="number" step="0.01" id="q10_6_input" placeholder="Enter total">
+                <button class="check-button" onclick="checkAnswer('q10_6', 201.00)">Check Answer</button>
+                <div id="q10_6_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 10.7: Subtract: ₹1000 - ₹345</h3>
+                <input type="number" id="q10_7_input" placeholder="Enter difference">
+                <button class="check-button" onclick="checkAnswer('q10_7', 655)">Check Answer</button>
+                <div id="q10_7_feedback" class="feedback"></div>
+            </div>
+            <!-- Add more questions for Topic 10 here (up to 15) -->
+
+        </div>
+
+        <!-- Topic 11: Word Problems -->
+        <div id="topic11" class="topic-section">
+            <h2>11. Word Problems</h2>
+            <div class="question-block">
+                <h3>Question 11.1: Riya bought chocolates for ₹120 and a cake for ₹380. How much did she spend in all?</h3>
+                <input type="number" id="q11_1_input" placeholder="Enter total spent">
+                <button class="check-button" onclick="checkAnswer('q11_1', 500)">Check Answer</button>
+                <div id="q11_1_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 11.2: She had ₹1000. After the party, she had ₹450 left. How much did she spend?</h3>
+                <input type="number" id="q11_2_input" placeholder="Enter amount spent">
+                <button class="check-button" onclick="checkAnswer('q11_2', 550)">Check Answer</button>
+                <div id="q11_2_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 11.3: Rohan saved ₹50 each week for 4 weeks. How much money did he save in total?</h3>
+                <input type="number" id="q11_3_input" placeholder="Enter total saved">
+                <button class="check-button" onclick="checkAnswer('q11_3', 200)">Check Answer</button>
+                <div id="q11_3_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 11.4: A bag costs ₹250. During a sale, it was discounted by ₹50. What is the new price of the bag?</h3>
+                <input type="number" id="q11_4_input" placeholder="Enter new price">
+                <button class="check-button" onclick="checkAnswer('q11_4', 200)">Check Answer</button>
+                <div id="q11_4_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 11.5: You want to buy a book for ₹180. You have ₹100. How much more money do you need?</h3>
+                <input type="number" id="q11_5_input" placeholder="Enter amount needed">
+                <button class="check-button" onclick="checkAnswer('q11_5', 80)">Check Answer</button>
+                <div id="q11_5_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 11.6: A family spent ₹150 on bus fares and ₹300 on food. What was their total spending?</h3>
+                <input type="number" id="q11_6_input" placeholder="Enter total spending">
+                <button class="check-button" onclick="checkAnswer('q11_6', 450)">Check Answer</button>
+                <div id="q11_6_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 11.7: Pooja had ₹750. She bought groceries for ₹250 and medicines for ₹180. How much money is left with her?</h3>
+                <input type="number" id="q11_7_input" placeholder="Enter amount left">
+                <button class="check-button" onclick="checkAnswer('q11_7', 320)">Check Answer</button>
+                <div id="q11_7_feedback" class="feedback"></div>
+            </div>
+            <!-- Add more questions for Topic 11 here (up to 15) -->
+
+        </div>
+
+        <!-- Topic 12: Comparing Prices / More or Less -->
+        <div id="topic12" class="topic-section">
+            <h2>12. Comparing Prices / More or Less</h2>
+            <div class="question-block">
+                <h3>Question 12.1: Which item is cheaper? A Pen for ₹25 or a Pencil for ₹15? (Pen/Pencil)</h3>
+                <input type="text" id="q12_1_input" placeholder="Pen or Pencil">
+                <button class="check-button" onclick="checkAnswer('q12_1', 'Pencil')">Check Answer</button>
+                <div id="q12_1_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 12.2: Who spent more? Anil spent ₹300 on toys, and Bina spent ₹350 on clothes. (Anil/Bina)</h3>
+                <input type="text" id="q12_2_input" placeholder="Anil or Bina">
+                <button class="check-button" onclick="checkAnswer('q12_2', 'Bina')">Check Answer</button>
+                <div id="q12_2_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 12.3: Order these prices from cheapest to most expensive: ₹100, ₹75, ₹120, ₹50. (Separate with commas, e.g., 50,75,100,120)</h3>
+                <input type="text" id="q12_3_input" placeholder="e.g., 50,75,100,120">
+                <button class="check-button" onclick="checkAnswer('q12_3', '50,75,100,120')">Check Answer</button>
+                <div id="q12_3_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 12.4: True or False: A ₹200 note is more valuable than two ₹50 notes.</h3>
+                <div class="options">
+                    <label><input type="radio" name="q12_4_options" value="True"> True</label>
+                    <label><input type="radio" name="q12_4_options" value="False"> False</label>
+                </div>
+                <button class="check-button" onclick="checkAnswer('q12_4', 'True')">Check Answer</button>
+                <div id="q12_4_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 12.5: Which pair of items is more expensive than ₹300? (If prices are: Ball ₹100, Bat ₹250, Gloves ₹150)</h3>
+                <div class="options">
+                    <label><input type="radio" name="q12_5_options" value="a"> a) Ball + Gloves</label>
+                    <label><input type="radio" name="q12_5_options" value="b"> b) Bat + Gloves</label>
+                    <label><input type="radio" name="q12_5_options" value="c"> c) Ball + Bat</label>
+                </div>
+                <button class="check-button" onclick="checkAnswer('q12_5', 'b')">Check Answer</button>
+                <div id="q12_5_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 12.6: Item A costs ₹450, Item B costs ₹420. How much cheaper is Item B than Item A?</h3>
+                <input type="number" id="q12_6_input" placeholder="Enter difference">
+                <button class="check-button" onclick="checkAnswer('q12_6', 30)">Check Answer</button>
+                <div id="q12_6_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 12.7: A pack of biscuits costs ₹60. A pack of chocolates costs ₹85. Which is more expensive? (Biscuits/Chocolates)</h3>
+                <input type="text" id="q12_7_input" placeholder="Biscuits or Chocolates">
+                <button class="check-button" onclick="checkAnswer('q12_7', 'Chocolates')">Check Answer</button>
+                <div id="q12_7_feedback" class="feedback"></div>
+            </div>
+            <!-- Add more questions for Topic 12 here (up to 15) -->
+
+        </div>
+
+        <!-- Topic 13: Estimating Costs -->
+        <div id="topic13" class="topic-section">
+            <h2>13. Estimating Costs</h2>
+            <div class="question-block">
+                <h3>Question 13.1: Estimate: A toy costs ₹275. Around how much is that? (₹200/₹300)</h3>
+                <div class="options">
+                    <label><input type="radio" name="q13_1_options" value="200"> a) ₹200</label>
+                    <label><input type="radio" name="q13_1_options" value="300"> b) ₹300</label>
+                </div>
+                <button class="check-button" onclick="checkAnswer('q13_1', '300')">Check Answer</button>
+                <div id="q13_1_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 13.2: Estimate the total cost of two items: A shirt for ₹380 and a cap for ₹120. (Near ₹400/₹500/₹600)</h3>
+                <div class="options">
+                    <label><input type="radio" name="q13_2_options" value="400"> a) Around ₹400</label>
+                    <label><input type="radio" name="q13_2_options" value="500"> b) Around ₹500</label>
+                    <label><input type="radio" name="q13_2_options" value="600"> c) Around ₹600</label>
+                </div>
+                <button class="check-button" onclick="checkAnswer('q13_2', '500')">Check Answer</button>
+                <div id="q13_2_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 13.3: Is ₹100 enough to buy a chocolate for ₹45 and a drink for ₹60? (Yes/No)</h3>
+                <input type="text" id="q13_3_input" placeholder="Yes or No">
+                <button class="check-button" onclick="checkAnswer('q13_3', 'No')">Check Answer</button>
+                <div id="q13_3_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 13.4: A book costs ₹195. To the nearest ₹10, how much does it cost?</h3>
+                <input type="number" id="q13_4_input" placeholder="Enter amount">
+                <button class="check-button" onclick="checkAnswer('q13_4', 200)">Check Answer</button>
+                <div id="q13_4_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 13.5: You have ₹500. Can you roughly afford a toy for ₹280 and another for ₹210? (Yes/No)</h3>
+                <input type="text" id="q13_5_input" placeholder="Yes or No">
+                <button class="check-button" onclick="checkAnswer('q13_5', 'Yes')">Check Answer</button>
+                <div id="q13_5_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 13.6: Estimate the cost of 3 items, each costing around ₹95. (Around ₹200/₹300/₹400)</h3>
+                <div class="options">
+                    <label><input type="radio" name="q13_6_options" value="200"> a) Around ₹200</label>
+                    <label><input type="radio" name="q13_6_options" value="300"> b) Around ₹300</label>
+                    <label><input type="radio" name="q13_6_options" value="400"> c) Around ₹400</label>
+                </div>
+                <button class="check-button" onclick="checkAnswer('q13_6', '300')">Check Answer</button>
+                <div id="q13_6_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 13.7: An item costs ₹49. Is it closer to ₹40 or ₹50?</h3>
+                <input type="number" id="q13_7_input" placeholder="Enter number">
+                <button class="check-button" onclick="checkAnswer('q13_7', 50)">Check Answer</button>
+                <div id="q13_7_feedback" class="feedback"></div>
+            </div>
+            <!-- Add more questions for Topic 13 here (up to 15) -->
+
+        </div>
+
+        <!-- Topic 14: Giving Change -->
+        <div id="topic14" class="topic-section">
+            <h2>14. Giving Change</h2>
+            <div class="question-block">
+                <h3>Question 14.1: If you give ₹100 and your toy costs ₹65, how much change should you get?</h3>
+                <input type="number" id="q14_1_input" placeholder="Enter change">
+                <button class="check-button" onclick="checkAnswer('q14_1', 35)">Check Answer</button>
+                <div id="q14_1_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 14.2: You buy an ice cream for ₹40 and pay with a ₹50 note. How much change do you receive?</h3>
+                <input type="number" id="q14_2_input" placeholder="Enter change">
+                <button class="check-button" onclick="checkAnswer('q14_2', 10)">Check Answer</button>
+                <div id="q14_2_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 14.3: A book costs ₹130. You pay with a ₹200 note. What is your change?</h3>
+                <input type="number" id="q14_3_input" placeholder="Enter change">
+                <button class="check-button" onclick="checkAnswer('q14_3', 70)">Check Answer</button>
+                <div id="q14_3_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 14.4: You bought chocolates for ₹75 and paid with a ₹100 note. List two possible ways to receive your change. (e.g., 1x20+1x5 or 5x5)</h3>
+                <input type="text" id="q14_4_input" placeholder="e.g., 1x20+1x5, 5x5">
+                <button class="check-button" onclick="checkAnswer('q14_4', ['1x20+1x5', '5x5', '2x10+1x5', '3x10+1x5', '1x20+5x1'], true)">Check Answer</button>
+                <div id="q14_4_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 14.5: Total bill is ₹420. You pay with a ₹500 note. How much change do you get?</h3>
+                <input type="number" id="q14_5_input" placeholder="Enter change">
+                <button class="check-button" onclick="checkAnswer('q14_5', 80)">Check Answer</button>
+                <div id="q14_5_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 14.6: If an item costs ₹30 and you pay with a ₹100 note, how many ₹10 notes could you get as change?</h3>
+                <input type="number" id="q14_6_input" placeholder="Enter number">
+                <button class="check-button" onclick="checkAnswer('q14_6', 7)">Check Answer</button>
+                <div id="q14_6_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 14.7: You buy two items costing ₹60 each. You pay with two ₹100 notes. How much change do you get?</h3>
+                <input type="number" id="q14_7_input" placeholder="Enter change">
+                <button class="check-button" onclick="checkAnswer('q14_7', 80)">Check Answer</button>
+                <div id="q14_7_feedback" class="feedback"></div>
+            </div>
+            <!-- Add more questions for Topic 14 here (up to 15) -->
+
+        </div>
+
+        <!-- Topic 15: Multiplication with Money -->
+        <div id="topic15" class="topic-section">
+            <h2>15. Multiplication with Money (for slightly older kids)</h2>
+            <div class="question-block">
+                <h3>Question 15.1: 4 boxes of crayons at ₹15 each. What is the total cost?</h3>
+                <input type="number" id="q15_1_input" placeholder="Enter total">
+                <button class="check-button" onclick="checkAnswer('q15_1', 60)">Check Answer</button>
+                <div id="q15_1_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 15.2: You buy 5 packs of stickers. Each pack costs ₹20. How much do you spend in total?</h3>
+                <input type="number" id="q15_2_input" placeholder="Enter total">
+                <button class="check-button" onclick="checkAnswer('q15_2', 100)">Check Answer</button>
+                <div id="q15_2_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 15.3: A school buys 10 storybooks at ₹75 each. What is the total cost?</h3>
+                <input type="number" id="q15_3_input" placeholder="Enter total">
+                <button class="check-button" onclick="checkAnswer('q15_3', 750)">Check Answer</button>
+                <div id="q15_3_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 15.4: If a ticket to the zoo costs ₹120 per child, how much will it cost for 3 children?</h3>
+                <input type="number" id="q15_4_input" placeholder="Enter total cost">
+                <button class="check-button" onclick="checkAnswer('q15_4', 360)">Check Answer</button>
+                <div id="q15_4_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 15.5: Each candy costs ₹5. If you buy a bag with 12 candies, how much do you pay?</h3>
+                <input type="number" id="q15_5_input" placeholder="Enter total">
+                <button class="check-button" onclick="checkAnswer('q15_5', 60)">Check Answer</button>
+                <div id="q15_5_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 15.6: A baker sells cakes for ₹300 each. If she sells 6 cakes, how much money does she earn?</h3>
+                <input type="number" id="q15_6_input" placeholder="Enter total earnings">
+                <button class="check-button" onclick="checkAnswer('q15_6', 1800)">Check Answer</button>
+                <div id="q15_6_feedback" class="feedback"></div>
+            </div>
+
+            <div class="question-block">
+                <h3>Question 15.7: A set of toy blocks costs ₹250. How much would 4 such sets cost?</h3>
+                <input type="number" id="q15_7_input" placeholder="Enter total cost">
+                <button class="check-button" onclick="checkAnswer('q15_7', 1000)">Check Answer</button>
+                <div id="q15_7_feedback" class="feedback"></div>
+            </div>
+            <!-- Add more questions for Topic 15 here (up to 15) -->
+
+        </div>
+
+        <div class="total-score-container">
+            <button class="reset-button" onclick="resetApp()">Reset All Progress</button>
+            <div id="totalScore" class="total-score">Score: 0 / 0</div>
+        </div>
+
+    </div>
+
+    <script>
+        const score = {}; // Stores score for each question {q_id: true/false}
+        const totalQuestions = {}; // Stores max possible score for each question
+
+        // Initialize totalQuestions based on hardcoded questions
+        document.querySelectorAll('.question-block').forEach(block => {
+            const questionId = block.querySelector('[id$="_input"], [name$="_options"]').id || block.querySelector('[id$="_input"], [name$="_options"]').name;
+            totalQuestions[questionId.replace('_input', '').replace('_options', '')] = 1;
+        });
+
+        function updateOverallScore() {
+            let correctCount = 0;
+            let totalCount = 0;
+            for (const qId in score) {
+                if (score[qId] === true) {
+                    correctCount++;
+                }
+                totalCount++;
+            }
+            document.getElementById('totalScore').innerText = `Score: ${correctCount} / ${totalCount}`;
+        }
+
+        function checkAnswer(questionId, correctAnswer, isFlexibleText = false) {
+            let userAnswer;
+            let inputElement;
+            const feedbackElement = document.getElementById(`${questionId}_feedback`);
+
+            // Clear previous feedback
+            feedbackElement.className = 'feedback';
+            feedbackElement.innerText = '';
+
+            // Handle different input types
+            if (document.getElementById(`${questionId}_input`)) {
+                inputElement = document.getElementById(`${questionId}_input`);
+                userAnswer = inputElement.value.trim();
+                if (inputElement.type === 'number') {
+                    userAnswer = parseFloat(userAnswer);
+                } else if (!isFlexibleText && userAnswer) {
+                    userAnswer = userAnswer.toLowerCase(); // Standardize for exact string match
+                }
+            } else if (document.querySelector(`input[name="${questionId}_options"]:checked`)) {
+                const checkedOptions = Array.from(document.querySelectorAll(`input[name="${questionId}_options"]:checked`));
+                if (checkedOptions[0].type === 'radio') {
+                    userAnswer = checkedOptions[0].value;
+                } else if (checkedOptions[0].type === 'checkbox') {
+                    userAnswer = checkedOptions.map(cb => cb.value).sort(); // Sort for consistent comparison
+                    correctAnswer.sort();
+                }
+            }
+
+            let isCorrect = false;
+
+            if (userAnswer === undefined || userAnswer === '' || (Array.isArray(userAnswer) && userAnswer.length === 0)) {
+                feedbackElement.classList.add('partial');
+                feedbackElement.innerText = "Please enter an answer.";
+                score[questionId] = false; // Mark as incorrect if no answer
+            } else if (isFlexibleText) {
+                // For flexible text answers (e.g., Q2.1 combinations, Q14.4 change options)
+                const userCombinations = userAnswer.split(',').map(s => s.trim().toLowerCase()).filter(s => s);
+                // Check if *any* of the user's combinations are present in the list of correct answers
+                // This is a simplified check, more robust would parse and validate math.
+                isCorrect = userCombinations.some(userComb => {
+                    return correctAnswer.some(correctComb => {
+                        return correctComb.toLowerCase().includes(userComb) || userComb.includes(correctComb.toLowerCase());
+                    });
+                });
+                if (isCorrect && userCombinations.length >= 2) { // Encourage multiple combinations for list questions
+                    feedbackElement.classList.add('correct');
+                    feedbackElement.innerText = "Correct! Great combinations!";
+                    score[questionId] = true;
+                } else if (isCorrect && userCombinations.length < 2) {
+                     feedbackElement.classList.add('partial');
+                     feedbackElement.innerText = "Partially correct. Can you think of more ways?";
+                     score[questionId] = true; // Still give credit for at least one correct
+                } else {
+                    feedbackElement.classList.add('incorrect');
+                    feedbackElement.innerText = "Incorrect. Try different combinations!";
+                    score[questionId] = false;
+                }
+            } else if (Array.isArray(correctAnswer) && typeof correctAnswer[0] === 'object' && correctAnswer[0] !== null && 'length' in correctAnswer[0]) {
+                // This is for Q2.2 type 'combination' where order doesn't matter, but components do
+                const userNumbers = userAnswer.split(',').map(s => parseFloat(s.trim())).filter(n => !isNaN(n)).sort((a,b) => a - b);
+                isCorrect = correctAnswer.some(correctNums => {
+                    const sortedCorrect = [...correctNums].sort((a,b) => a - b);
+                    return userNumbers.length === sortedCorrect.length &&
+                           userNumbers.every((val, index) => val === sortedCorrect[index]);
+                });
+                if (userNumbers.reduce((sum, num) => sum + num, 0) === 200 && isCorrect) {
+                     feedbackElement.classList.add('correct');
+                     feedbackElement.innerText = "Correct!";
+                     score[questionId] = true;
+                } else {
+                     feedbackElement.classList.add('incorrect');
+                     feedbackElement.innerText = "Incorrect. The numbers don't add up to ₹200 or the combination is not valid. Remember to enter three numbers, comma separated.";
+                     score[questionId] = false;
+                }
+            }
+            else if (Array.isArray(correctAnswer)) { // For checkbox questions
+                if (userAnswer.length === correctAnswer.length && userAnswer.every((val, index) => val === correctAnswer[index])) {
+                    isCorrect = true;
+                }
+            } else if (typeof correctAnswer === 'number') { // For number inputs
+                 // Allow for slight floating point precision differences, but mostly exact
+                isCorrect = Math.abs(userAnswer - correctAnswer) < 0.001;
+            } else { // For text/radio inputs
+                isCorrect = userAnswer === correctAnswer.toLowerCase();
+            }
+
+            if (isCorrect && !isFlexibleText) {
+                feedbackElement.classList.add('correct');
+                feedbackElement.innerText = "Correct!";
+                score[questionId] = true;
+            } else if (!isCorrect && !isFlexibleText) {
+                feedbackElement.classList.add('incorrect');
+                feedbackElement.innerText = "Incorrect. Please try again!";
+                score[questionId] = false;
+            }
+            updateOverallScore();
+        }
+
+        function showTopic(topicId) {
+            document.querySelectorAll('.topic-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(topicId).classList.add('active');
+
+            document.querySelectorAll('.topic-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            document.querySelector(`.topic-button[data-topic="${topicId}"]`).classList.add('active');
+            updateOverallScore(); // Update score display when changing topic
+        }
+
+        function resetApp() {
+            if (confirm("Are you sure you want to reset all your progress?")) {
+                // Clear all input fields
+                document.querySelectorAll('input[type="text"], input[type="number"]').forEach(input => {
+                    input.value = '';
+                });
+                // Uncheck all radio and checkbox inputs
+                document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(input => {
+                    input.checked = false;
+                });
+                // Clear all feedback messages
+                document.querySelectorAll('.feedback').forEach(feedback => {
+                    feedback.className = 'feedback';
+                    feedback.innerText = '';
+                });
+                // Reset score
+                for (const key in score) {
+                    delete score[key];
+                }
+                updateOverallScore();
+                showTopic('topic1'); // Go back to the first topic
+            }
+        }
+
+        // Event listeners for topic navigation
+        document.querySelectorAll('.topic-button').forEach(button => {
+            button.addEventListener('click', () => {
+                showTopic(button.dataset.topic);
+            });
+        });
+
+        // Initial load: show the first topic
+        document.addEventListener('DOMContentLoaded', () => {
+            showTopic('topic1');
+            updateOverallScore();
+        });
+    </script>
+</body>
+</html>
